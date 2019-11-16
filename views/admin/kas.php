@@ -364,9 +364,9 @@ if (@$_GET['act'] == '') {
                                         <td><?php echo $data->id_kategori; ?></td>
                                         <td>
                                             <button type="button" title="Lihat kwitansi" class="btn btn-info btn-xs"
-                                                    data-toggle="modal" data-target="#lihatkwitansi"><i
+                                                    data-toggle="modal" data-target="#lihatkwitansi<?=$data->id_transaksi;?>"><i
                                                         class="fa fa-eye"></i></button>
-                                            <div class="modal fade" id="lihatkwitansi" role="dialog">
+                                            <div class="modal fade" id="lihatkwitansi<?=$data->id_transaksi;?>" role="dialog">
                                                 <div class="modal-dialog modals-default">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
