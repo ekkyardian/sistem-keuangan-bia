@@ -20,7 +20,7 @@ $laporankeseluruhan = new LaporanKeseluruhan($connection);
             <tr align="center">
                 <td colspan="2">Logo</td>
                 <td colspan="5">
-                    <h2>PT BINA INFRA ANTARNUSA</h1>
+                    <h2>PT BINA INFRA ANTARNUSA</h2>
                     <p>LAPORAN KEUANGAN KAS</p>
                     <p>BULAN ... TAHUN ...</p>
                 </td>
