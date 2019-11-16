@@ -291,16 +291,43 @@ if(@$_GET['act']=='') {
                                     <td><?php echo $data->jumlah; ?></td>
                                     <td><?php echo $data->id_kategori; ?></td>
                                     <td>
-                                        <button type="button" title="Lihat kwitansi" class="btn btn-info btn-xs" data-toggle="modal" data-target="#lihatkwitansi"><i class="fa fa-eye"></i></button>
-                                        <div class="modal fade" id="lihatkwitansi" role="dialog">
+                                        <script type="text/javascript">
+                                        $(document).on("click", "#lihat_kwitansi", function() {
+                                            var j_kwitansi = $(this).data('kwitansi');
+                                            $("#modal_kwitansi #kwitansi").val(j_kwitansi);
+                                        })
+
+                                        // $(document).ready(function(e) {
+                                        //     $("#form_kwitansi").on("submit", (function(e) {
+                                        //         e.preventDefault();
+                                        //         $.ajax({
+                                        //             url         : 'models/admin/proses_lihat_kwitansi.php',
+                                        //             type        : 'POST',
+                                        //             data        : new FormData(this),
+                                        //             contentType : false,
+                                        //             cache       : false,
+                                        //             processData : false,
+                                        //             success     : function(msg) {
+                                        //                 $('.table').html(msg);
+                                        //             }
+                                        //         })
+                                        //     }))
+                                        // })
+                                        </script>
+                                        <a id="lihat_kwitansi" data-toggle="modal" data-target="#lihatkwitansi<?php $data->id_transaksi; ?>" data-kwitansi="<?php echo $data->kwitansi; ?>">
+                                            <button type="button" title="Lihat kwitansi" class="btn btn-info btn-xs" data-toggle="modal" data-target="#lihatkwitansi"><i class="fa fa-eye"></i></button>
+                                        </a>
+                                        <div class="modal fade" id="lihatkwitansi<?php $data->id_transaksi; ?>" role="dialog">
                                             <div class="modal-dialog modals-default">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
-                                                    <div class="modal-body" align="middle">
-                                                        <img src="assets/img/kwitansi/<?php echo $data->kwitansi_pendukung; ?>" alt="Kwitansi">
-                                                    </div>
+                                                    <form id="form_kwitansi" enctype="multipart/form-data">
+                                                        <div class="modal-body" id="modal_kwitansi" align="middle">
+                                                            <img src="assets/img/kwitansi/<?php echo $data->kwitansi_pendukung; ?>" alt="Kwitansi">
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
