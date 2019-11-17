@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: rizki
- * Date: 16/11/2019
- * Time: 15:48
- */
-
 class M_bulan
 {
     // variabel connection to mysqli

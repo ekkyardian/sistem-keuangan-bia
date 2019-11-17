@@ -18,6 +18,9 @@ $setIdBulan = function($id) {
 
 if(isset($_GET['go'])) {
     $getUri = $kas->get_uri();
+
+    $periode_bulan = $getUri['periode_bulan'];
+    $periode_tahun = $getUri['periode_tahun'];
 }
 
 if (@$_GET['act'] == '') {
@@ -30,65 +33,76 @@ if (@$_GET['act'] == '') {
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="breadcomb-list">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                                 <div class="breadcomb-wp">
                                     <div class="breadcomb-icon">
                                         <i class="notika-icon notika-windows"></i>
                                     </div>
                                     <div class="breadcomb-ctn">
                                         <h4>Periode:</h4>
-                                        <form name="kas_show_by" action="" method="get">
-                                            <table>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <select name="periode_bulan" id="periode_bulan" class="form-control">
-                                                            <option value="">Bulan...</option>
-                                                            <?php
-                                                            $result = $mBulan->get_bulan();
-                                                            while ($data = $result->fetch_object()) {
-                                                                $bulan = $setIdBulan($data->bulan);
-                                                                $nama_bulan = ucfirst($data->nama_bulan);
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form name="kas_show_by" action="" method="get" class="form-custom">
+                                                    <select name="periode_bulan" id="periode_bulan" class="form-control form-control-custom">
+                                                        <option value="">Bulan...</option>
+                                                        <?php
+                                                        $result = $mBulan->get_bulan();
+                                                        while ($data = $result->fetch_object()) {
+                                                            $bulan = $setIdBulan($data->bulan);
+                                                            $nama_bulan = ucfirst($data->nama_bulan);
 
-                                                                if(isset($_GET['periode_bulan']) && $_GET['periode_bulan'] == $bulan) {
-                                                                    $selected = "selected";
-                                                                } else { $selected = ""; }
+                                                            if(isset($_GET['periode_bulan']) && $_GET['periode_bulan'] == $bulan) {
+                                                                $selected = "selected";
+                                                            } else { $selected = ""; }
 
-                                                                echo '<option value="'.$bulan.'" '.$selected.'>'.$nama_bulan.'</option>';
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>&nbsp;&nbsp;</td>
-                                                    <td>
-                                                        <select name="periode_tahun" id="periode_tahun" class="form-control">
-                                                            <option value="">Tahun...</option>
-                                                            <?php
-                                                            for($y = date("Y"); $y >= (date("Y") - 4); $y--) {
+                                                            echo '<option value="'.$bulan.'" '.$selected.'>'.$nama_bulan.'</option>';
+                                                        }
+                                                        ?>
+                                                    </select> &nbsp;&nbsp;
 
-                                                                if(isset($_GET['periode_tahun']) && $_GET['periode_tahun'] == $y) {
-                                                                    $selected = "selected";
-                                                                } else { $selected = ""; }
+                                                    <select name="periode_tahun" id="periode_tahun" class="form-control form-control-custom">
+                                                        <option value="">Tahun...</option>
+                                                        <?php
+                                                        for($y = date("Y"); $y >= (date("Y") - 4); $y--) {
 
-                                                                echo '<option value="'.$y.'" '.$selected.'>'.$y.'</option>';
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </td>
-                                                    <td>&nbsp;&nbsp;</td>
-                                                    <td>
-                                                        <input type="hidden" name="page" value="kas">
-                                                        <button type="submit" class="btn btn-success" name="go">Go</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </form>
+                                                            if(isset($_GET['periode_tahun']) && $_GET['periode_tahun'] == $y) {
+                                                                $selected = "selected";
+                                                            } else { $selected = ""; }
+
+                                                            echo '<option value="'.$y.'" '.$selected.'>'.$y.'</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+
+                                                    <input type="hidden" name="page" value="kas">
+                                                    <button type="submit" class="btn btn-success" name="go">Go</button>
+                                                </form>
+                                                <form action="" method="POST" class="form-custom">
+                                                    <input type="hidden" name="jumlah_saldo" value="500">
+                                                    <input type="hidden" name="page" value="kas">
+                                                    <input type="hidden" name="lokasi_dana" value="Kas">
+                                                    <button type="submit" data-placement="left" title="Update Saldo"
+                                                            class="btn btn-danger" name="update_saldo"><i
+                                                                class="fa fa-dollar"></i>&nbsp;&nbsp;Update Saldo
+                                                    </button>
+                                                </form>
+                                                
+                                                <?php
+                                                if(isset($_POST['update_saldo'])) {
+                                                    $lokasi_dana = $connection->conn->real_escape_string($_POST['lokasi_dana']);
+                                                    $jumlah_saldo = $connection->conn->real_escape_string($_POST['jumlah_saldo']);
+
+                                                    $kas->update_saldo($periode_bulan, $periode_tahun, $lokasi_dana, $jumlah_saldo);
+                                                    header("location: index.php?page=kas");
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Tambah Data area Start-->
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
                                 <div class="breadcomb-report">
                                     <button type="button" data-placement="left" title="Tambah Data"
                                             class="btn breadcomb-report" data-toggle="modal" data-target="#tambah"><i
