@@ -6,16 +6,16 @@ class LaporanKeseluruhan {
         $this->mysqli = $conn;
     }
 
-    public function tampil_kas($bulan, $tahun, $sumber_dana) {
+    public function tampil_kas($bulan, $tahun) {
         $db     = $this->mysqli->conn;
-        $sql    = "SELECT * FROM tb_transaksi WHERE month(tanggal)='$bulan' AND year(tanggal)='$tahun' AND lokasi_dana = '$sumber_dana' ORDER BY tanggal asc";
+        $sql    = "SELECT * FROM tb_transaksi WHERE month(tanggal)='$bulan' AND year(tanggal)='$tahun' AND lokasi_dana = 'Kas' ORDER BY tanggal asc";
         $query = $db->query($sql) or die ($db->error);
         return $query;
     }
 
-    public function tampil_saldo($bulan_saldo, $tahun_saldo, $sumber_dana) {
+    public function tampil_saldo($bulan_saldo, $tahun_saldo) {
         $db = $this->mysqli->conn;
-        $sql = "SELECT jumlah_saldo FROM tb_saldo WHERE periode_bulan='$bulan_saldo' AND periode_tahun='$tahun_saldo' AND lokasi_dana='$sumber_dana'";
+        $sql = "SELECT jumlah_saldo FROM tb_saldo WHERE periode_bulan='$bulan_saldo' AND periode_tahun='$tahun_saldo'";
         $query = $db->query($sql) or die ($db->error);
         return $query;
     }

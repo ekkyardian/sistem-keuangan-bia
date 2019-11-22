@@ -83,7 +83,7 @@ $tahun = date('Y');
                     <div align="center">
                         <table>
                             <tr>
-<!--                                <td><img src="../../assets/img/logo-bia.png" width="280px"></td>-->
+                                <!--                                <td><img src="../../assets/img/logo-bia.png" width="280px"></td>-->
                                 <td><img src="../../assets/img/si-logo.png" width="280px"></td>
                             </tr>
                         </table>

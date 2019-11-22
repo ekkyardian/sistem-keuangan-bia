@@ -1339,7 +1339,7 @@ ul.tab-ctn-list li:last-child{
 	font-size:14px;
 	color:#333;
 }
-.alert-list .alert-success, .alert-list .alert-info, .alert-list .alert-warning, .alert-list .alert-danger{
+.alert-list .alert-success, .alert-list .alert-info, .alert-list .alert-warning, .alert-list .alert-danger .alert-ghost{
 	border-radius:3px;
 	color:#fff;
 }
@@ -1354,6 +1354,10 @@ ul.tab-ctn-list li:last-child{
 }
 .alert-list .alert-danger{
 	background:#F44336;
+}
+.alert-list .ghost{
+    background: unset;
+    color: #00c292 !important;
 }
 .alert-mg-b-0{
 	margin-bottom:0px;

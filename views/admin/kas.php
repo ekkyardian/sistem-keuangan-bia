@@ -1,6 +1,6 @@
 <?php
-include "models/admin/m_kas.php";
-include "models/admin/m_bulan.php";
+include "../../models/admin/m_kas.php";
+include "../../models/admin/m_bulan.php";
 
 $kas = new Kas($connection);
 
@@ -8,15 +8,15 @@ $kas = new Kas($connection);
 $mBulan = new M_bulan($connection);
 
 // set id bulan
-$setIdBulan = function($id) {
-    if($id <= 9) {
-        $id = "0".$id;
+$setIdBulan = function ($id) {
+    if ($id <= 9) {
+        $id = "0" . $id;
     }
 
     return $id;
 };
 
-if(isset($_GET['go'])) {
+if (isset($_GET['go'])) {
     $getUri = $kas->get_uri();
 
     $periode_bulan = $getUri['periode_bulan'];
@@ -36,14 +36,15 @@ if (@$_GET['act'] == '') {
                             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                                 <div class="breadcomb-wp">
                                     <div class="breadcomb-icon">
-                                        <i class="notika-icon notika-windows"></i>
+                                        <i class="notika-icon notika-draft"></i>
                                     </div>
                                     <div class="breadcomb-ctn">
-                                        <h4>Periode:</h4>
+                                        <p style="font-size: 16px"><strong>Periode Laporan:</strong></p><br />
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <form name="kas_show_by" action="" method="get" class="form-custom">
-                                                    <select name="periode_bulan" id="periode_bulan" class="form-control form-control-custom">
+                                                    <select name="periode_bulan" id="periode_bulan"
+                                                            class="form-control form-control-custom">
                                                         <option value="">Bulan...</option>
                                                         <?php
                                                         $result = $mBulan->get_bulan();
@@ -51,34 +52,38 @@ if (@$_GET['act'] == '') {
                                                             $bulan = $setIdBulan($data->bulan);
                                                             $nama_bulan = ucfirst($data->nama_bulan);
 
-                                                            if(isset($_GET['periode_bulan']) && $_GET['periode_bulan'] == $bulan) {
+                                                            if (isset($_GET['periode_bulan']) && $_GET['periode_bulan'] == $bulan) {
                                                                 $selected = "selected";
-                                                            } else { $selected = ""; }
+                                                            } else {
+                                                                $selected = "";
+                                                            }
 
-                                                            echo '<option value="'.$bulan.'" '.$selected.'>'.$nama_bulan.'</option>';
+                                                            echo '<option value="' . $bulan . '" ' . $selected . '>' . $nama_bulan . '</option>';
                                                         }
                                                         ?>
-                                                    </select> &nbsp;&nbsp;
+                                                    </select>&nbsp;&nbsp;
 
-                                                    <select name="periode_tahun" id="periode_tahun" class="form-control form-control-custom">
+                                                    <select name="periode_tahun" id="periode_tahun"
+                                                            class="form-control form-control-custom">
                                                         <option value="">Tahun...</option>
                                                         <?php
-                                                        for($y = date("Y"); $y >= (date("Y") - 4); $y--) {
+                                                        for ($y = date("Y"); $y >= (date("Y") - 4); $y--) {
 
-                                                            if(isset($_GET['periode_tahun']) && $_GET['periode_tahun'] == $y) {
+                                                            if (isset($_GET['periode_tahun']) && $_GET['periode_tahun'] == $y) {
                                                                 $selected = "selected";
-                                                            } else { $selected = ""; }
+                                                            } else {
+                                                                $selected = "";
+                                                            }
 
-                                                            echo '<option value="'.$y.'" '.$selected.'>'.$y.'</option>';
+                                                            echo '<option value="' . $y . '" ' . $selected . '>' . $y . '</option>';
                                                         }
                                                         ?>
-                                                    </select>
+                                                    </select>&nbsp;&nbsp;
 
                                                     <input type="hidden" name="page" value="kas">
                                                     <button type="submit" class="btn btn-success" name="go">Go</button>
-                                                </form>
+                                                </form>&nbsp;
                                                 <form action="" method="POST" class="form-custom">
-                                                    <input type="hidden" name="jumlah_saldo" value="500">
                                                     <input type="hidden" name="page" value="kas">
                                                     <input type="hidden" name="lokasi_dana" value="Kas">
                                                     <button type="submit" data-placement="left" title="Update Saldo"
@@ -86,13 +91,13 @@ if (@$_GET['act'] == '') {
                                                                 class="fa fa-dollar"></i>&nbsp;&nbsp;Update Saldo
                                                     </button>
                                                 </form>
-                                                
-                                                <?php
-                                                if(isset($_POST['update_saldo'])) {
-                                                    $lokasi_dana = $connection->conn->real_escape_string($_POST['lokasi_dana']);
-                                                    $jumlah_saldo = $connection->conn->real_escape_string($_POST['jumlah_saldo']);
 
-                                                    $kas->update_saldo($periode_bulan, $periode_tahun, $lokasi_dana, $jumlah_saldo);
+                                                <?php
+                                                if (isset($_POST['update_saldo'])) {
+                                                    $lokasi_dana = $connection->conn->real_escape_string($_POST['lokasi_dana']);
+                                                    //$jumlah_saldo = $connection->conn->real_escape_string($_POST['jumlah_saldo']);
+
+                                                    $kas->update_saldo($periode_bulan, $periode_tahun, $lokasi_dana);
                                                     header("location: index.php?page=kas");
                                                 }
                                                 ?>
@@ -148,8 +153,14 @@ if (@$_GET['act'] == '') {
                                                             <td><label class="control-label" for="jenis">Jenis</label>
                                                             </td>
                                                             <td style="width: 1%">:</td>
-                                                            <td><input type="text" name="jenis" class="form-control"
-                                                                       id="jenis" required></td>
+                                                            <td>
+                                                                <select name="jenis" id="jenis"
+                                                                        class="form-control form-control-custom" required>
+                                                                    <option value="">Pilih...</option>
+                                                                    <option value="Debit">Debit</option>
+                                                                    <option value="Kredit">Kredit</option>
+                                                                </select>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><label class="control-label" for="jumlah">Jumlah</label>
@@ -159,14 +170,6 @@ if (@$_GET['act'] == '') {
                                                                        id="jumlah" required></td>
                                                             <input type="hidden" name="lokasi_dana" class="form-control"
                                                                    id="lokasi_dana" value="Kas">
-                                                        </tr>
-                                                        <tr>
-                                                            <td><label class="control-label"
-                                                                       for="id_kategori">Kategori</label></td>
-                                                            <td style="width: 1%">:</td>
-                                                            <td><input type="text" name="id_kategori"
-                                                                       class="form-control" id="id_kategori" required>
-                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><label class="control-label" for="kwitansi_pendukung">Kwitansi</label>
@@ -193,15 +196,14 @@ if (@$_GET['act'] == '') {
                                                 $jenis = $connection->conn->real_escape_string($_POST['jenis']);
                                                 $jumlah = $connection->conn->real_escape_string($_POST['jumlah']);
                                                 $lokasi_dana = $connection->conn->real_escape_string($_POST['lokasi_dana']);
-                                                $id_kategori = $connection->conn->real_escape_string($_POST['id_kategori']);
 
                                                 $extensi = explode(".", $_FILES['kwitansi_pendukung']['name']);
                                                 $kwitansi_pendukung = "Kwitansi-" . round(microtime(true)) . "." . end($extensi);
                                                 $sumber = $_FILES['kwitansi_pendukung']['tmp_name'];
 
-                                                $upload = move_uploaded_file($sumber, "assets/img/kwitansi/" . $kwitansi_pendukung);
+                                                $upload = move_uploaded_file($sumber, "../../assets/img/kwitansi/" . $kwitansi_pendukung);
                                                 if ($upload) {
-                                                    $kas->tambah($no_voucher, $tanggal, $deskripsi, $jenis, $jumlah, $lokasi_dana, $id_kategori, $kwitansi_pendukung);
+                                                    $kas->tambah($no_voucher, $tanggal, $deskripsi, $jenis, $jumlah, $lokasi_dana, $kwitansi_pendukung);
                                                     header("location: index.php?page=kas");
                                                 } else {
                                                     echo "<script>alert('Gagal mengunggah gambar :(')</script>";
@@ -250,8 +252,14 @@ if (@$_GET['act'] == '') {
                                                 <tr>
                                                     <td><label class="control-label" for="jenis">Jenis</label></td>
                                                     <td style="width: 1%">:</td>
-                                                    <td><input type="text" name="jenis" class="form-control" id="jenis"
-                                                               required></td>
+                                                    <td>
+                                                        <select name="jenis" id="jenis"
+                                                                class="form-control form-control-custom" required>
+                                                            <option value="">Pilih...</option>
+                                                            <option value="Debit">Debit</option>
+                                                            <option value="Kredit">Kredit</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><label class="control-label" for="jumlah">Jumlah</label></td>
@@ -260,13 +268,6 @@ if (@$_GET['act'] == '') {
                                                                id="jumlah" required></td>
                                                     <input type="hidden" name="lokasi_dana" class="form-control"
                                                            id="lokasi_dana" value="Kas">
-                                                </tr>
-                                                <tr>
-                                                    <td><label class="control-label" for="id_kategori">Kategori</label>
-                                                    </td>
-                                                    <td style="width: 1%">:</td>
-                                                    <td><input type="text" name="id_kategori" class="form-control"
-                                                               id="id_kategori" required></td>
                                                 </tr>
                                                 <tr>
                                                     <td><label class="control-label"
@@ -289,7 +290,7 @@ if (@$_GET['act'] == '') {
                                     </form>
                                 </div>
                             </div>
-                            <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
+                            <script src="../../assets/js/vendor/jquery-1.12.4.min.js"></script>
                             <script type="text/javascript">
                                 $(document).on("click", "#edit_kas", function () {
                                     var j_id_transaksi = $(this).data('id_transaksi');
@@ -299,7 +300,6 @@ if (@$_GET['act'] == '') {
                                     var j_jenis = $(this).data('jenis');
                                     var j_jumlah = $(this).data('jumlah');
                                     var j_lokasi_dana = $(this).data('lokasi_dana');
-                                    var j_id_kategori = $(this).data('id_kategori');
                                     var j_kwitansi_pendukung = $(this).data('kwitansi_pendukung');
                                     $("#modal_edit #id_transaksi").val(j_id_transaksi);
                                     $("#modal_edit #no_voucher").val(j_no_voucher);
@@ -308,15 +308,14 @@ if (@$_GET['act'] == '') {
                                     $("#modal_edit #jenis").val(j_jenis);
                                     $("#modal_edit #jumlah").val(j_jumlah);
                                     $("#modal_edit #lokasi_dana").val(j_lokasi_dana);
-                                    $("#modal_edit #id_kategori").val(j_id_kategori);
-                                    $("#modal_edit #pict").attr("src", "assets/img/kwitansi/" + j_kwitansi_pendukung);
+                                    $("#modal_edit #pict").attr("src", "../../assets/img/kwitansi/" + j_kwitansi_pendukung);
                                 })
 
                                 $(document).ready(function (e) {
                                     $("#form").on("submit", (function (e) {
                                         e.preventDefault();
                                         $.ajax({
-                                            url: 'models/admin/proses_edit_kas.php',
+                                            url: '../../models/admin/proses_edit_kas.php',
                                             type: 'POST',
                                             data: new FormData(this),
                                             contentType: false,
@@ -356,7 +355,6 @@ if (@$_GET['act'] == '') {
                                     <th>Deskripsi</th>
                                     <th>Jenis</th>
                                     <th>Jumlah (Rp)</th>
-                                    <th>Kategori</th>
                                     <th>Kwitansi</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -364,7 +362,6 @@ if (@$_GET['act'] == '') {
                                 <tbody>
                                 <?php
                                 $no = 1;
-                                //      $periode = $_POST['periode'];
                                 $tampil = $kas->tampil();
                                 while ($data = $tampil->fetch_object()) {
                                     ?>
@@ -374,13 +371,14 @@ if (@$_GET['act'] == '') {
                                         <td><?php echo $data->tanggal; ?></td>
                                         <td><?php echo $data->deskripsi; ?></td>
                                         <td><?php echo $data->jenis; ?></td>
-                                        <td><?php echo $data->jumlah; ?></td>
-                                        <td><?php echo $data->id_kategori; ?></td>
+                                        <td><?php echo number_format($data->jumlah, 0, ",", "."); ?></td>
                                         <td>
                                             <button type="button" title="Lihat kwitansi" class="btn btn-info btn-xs"
-                                                    data-toggle="modal" data-target="#lihatkwitansi<?=$data->id_transaksi;?>"><i
+                                                    data-toggle="modal"
+                                                    data-target="#lihatkwitansi<?= $data->id_transaksi; ?>"><i
                                                         class="fa fa-eye"></i></button>
-                                            <div class="modal fade" id="lihatkwitansi<?=$data->id_transaksi;?>" role="dialog">
+                                            <div class="modal fade" id="lihatkwitansi<?= $data->id_transaksi; ?>"
+                                                 role="dialog">
                                                 <div class="modal-dialog modals-default">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -389,7 +387,7 @@ if (@$_GET['act'] == '') {
                                                             </button>
                                                         </div>
                                                         <div class="modal-body" align="middle">
-                                                            <img src="assets/img/kwitansi/<?php echo $data->kwitansi_pendukung; ?>"
+                                                            <img src="../../assets/img/kwitansi/<?php echo $data->kwitansi_pendukung; ?>"
                                                                  alt="Kwitansi">
                                                         </div>
                                                     </div>
@@ -405,7 +403,6 @@ if (@$_GET['act'] == '') {
                                                data-jenis="<?php echo $data->jenis; ?>"
                                                data-jumlah="<?php echo $data->jumlah; ?>"
                                                data-lokasi_dana="<?php echo $data->lokasi_dana; ?>"
-                                               data-id_kategori="<?php echo $data->id_kategori; ?>"
                                                data-kwitansi_pendukung="<?php echo $data->kwitansi_pendukung; ?>">
                                                 <button class="btn btn-warning btn-xs" title="Edit data"><i
                                                             class="fa fa-edit"></i></button>
@@ -427,7 +424,6 @@ if (@$_GET['act'] == '') {
                                     <th>Deskripsi</th>
                                     <th>Jenis</th>
                                     <th>Jumlah (Rp)</th>
-                                    <th>Kategori</th>
                                     <th>Kwitansi</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -444,7 +440,7 @@ if (@$_GET['act'] == '') {
     <?php
 } else if (@$_GET['act'] == 'del') {
     $kwitansi_awal = $kas->tampil($_GET['id'])->fetch_object()->kwitansi_pendukung;
-    unlink("assets/img/kwitansi/" . $kwitansi_awal);
+    unlink("../../assets/img/kwitansi/" . $kwitansi_awal);
 
     $kas->hapus($_GET['id']);
     header("location: ?page=kas");
