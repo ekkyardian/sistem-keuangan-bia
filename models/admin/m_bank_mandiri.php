@@ -35,7 +35,7 @@ class BankMandiri {
             }
 
         } else if($id != null) {
-            $sql .= " WHERE id_transaksi = $id ";
+            $sql .= " WHERE id_transaksi = '$id' ";
         }
 
         // order by
@@ -46,12 +46,47 @@ class BankMandiri {
     }
 
     public function tambah($no_voucher, $tanggal, $deskripsi, $jenis, $jumlah, $lokasi_dana, $kwitansi_pendukung) {
+        // Ambil tahun aktif dari kalender PC
+        $thn = date('Y');
+
+        // Koneksi
         $db = $this->mysqli->conn;
-        $db->query("INSERT INTO tb_transaksi VALUES ('','$no_voucher','$tanggal','$deskripsi','$jenis','$jumlah','$lokasi_dana','$kwitansi_pendukung')") or die ($db->error);
+
+        // Cek nilai tertinggi id_transaksi + ambil datanya
+        $sql = "SELECT MAX(id_transaksi) AS maxID FROM tb_transaksi WHERE id_transaksi LIKE '%$thn'";
+        $query = $db->query($sql);
+        $data = mysqli_fetch_array($query);
+        $id_transaksi = $data['maxID'];
+
+        // uraikan nilai yang diambil dari id_transaksi + lakukan penjumlahan +1
+        $no_urut = (int) substr($id_transaksi, 0, 4);
+        $no_urut++;
+
+        // Tampung kriteria nilai id_transaksi baru
+        $char = "/TRS/".$thn;
+        $new_id = sprintf("%04s", $no_urut) . $char;
+
+        // Proses simpan data ke database
+        $db->query("INSERT INTO tb_transaksi VALUES ('$new_id','$no_voucher','$tanggal','$deskripsi','$jenis','$jumlah','$lokasi_dana','$kwitansi_pendukung')") or die ($db->error);
     }
 
     public function update_saldo($periode_bulan, $periode_tahun, $lokasi_dana) {
+        $thn = date('Y');
         $db = $this->mysqli->conn;
+
+        // Cek nilai tertinggi id_transaksi + ambil datanya
+        $sql = "SELECT MAX(id_saldo) AS maxID FROM tb_saldo WHERE id_saldo LIKE '%$thn'";
+        $query = $db->query($sql);
+        $data = mysqli_fetch_array($query);
+        $id_saldo = $data['maxID'];
+
+        // uraikan nilai yang diambil dari id_transaksi + lakukan penjumlahan +1
+        $no_urut = (int) substr($id_saldo, 0, 2);
+        $no_urut++;
+
+        // Tampung kriteria nilai id_transaksi baru
+        $char = "/SLD/".$thn;
+        $new_id = sprintf("%02s", $no_urut) . $char;
 
         //Menhitung jumlah saldo pada periode terpilih
         $jumlah_saldo = $db->query("SELECT tanggal, sum(if(jenis='Debit', jumlah, -jumlah)) AS jumlah FROM `tb_transaksi` WHERE year(tanggal)='$periode_tahun' AND month(tanggal)='$periode_bulan' AND lokasi_dana='$lokasi_dana'")->fetch_object()->jumlah;
@@ -106,7 +141,7 @@ class BankMandiri {
         if(count($cek) > 0) {
             $db->query("UPDATE tb_saldo SET jumlah_saldo=$x WHERE periode_bulan='$periode_bulan' AND periode_tahun='$periode_tahun' AND lokasi_dana='$lokasi_dana'");
         } else {
-            $db->query("INSERT INTO tb_saldo VALUES ('','$periode_bulan','$periode_tahun','$lokasi_dana',$x)") or die ($db->error);
+            $db->query("INSERT INTO tb_saldo VALUES ('$new_id','$periode_bulan','$periode_tahun','$lokasi_dana',$x)") or die ($db->error);
         }
     }
 

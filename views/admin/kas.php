@@ -44,7 +44,7 @@ if (@$_GET['act'] == '') {
                                             <div class="col-md-12">
                                                 <form name="kas_show_by" action="" method="get" class="form-custom">
                                                     <select name="periode_bulan" id="periode_bulan"
-                                                            class="form-control form-control-custom">
+                                                            class="form-control form-control-custom" required>
                                                         <option value="">Bulan...</option>
                                                         <?php
                                                         $result = $mBulan->get_bulan();
@@ -64,7 +64,7 @@ if (@$_GET['act'] == '') {
                                                     </select>&nbsp;&nbsp;
 
                                                     <select name="periode_tahun" id="periode_tahun"
-                                                            class="form-control form-control-custom">
+                                                            class="form-control form-control-custom" required>
                                                         <option value="">Tahun...</option>
                                                         <?php
                                                         for ($y = date("Y"); $y >= (date("Y") - 4); $y--) {
@@ -373,11 +373,14 @@ if (@$_GET['act'] == '') {
                                         <td><?php echo $data->jenis; ?></td>
                                         <td><?php echo number_format($data->jumlah, 0, ",", "."); ?></td>
                                         <td>
+                                            <?php
+                                            $ganti_id = str_replace("/", "", $data->id_transaksi);
+                                            ?>
                                             <button type="button" title="Lihat kwitansi" class="btn btn-info btn-xs"
                                                     data-toggle="modal"
-                                                    data-target="#lihatkwitansi<?= $data->id_transaksi; ?>"><i
+                                                    data-target="#lihatkwitansi<?php echo $ganti_id; ?>"><i
                                                         class="fa fa-eye"></i></button>
-                                            <div class="modal fade" id="lihatkwitansi<?= $data->id_transaksi; ?>"
+                                            <div class="modal fade" id="lihatkwitansi<?php echo $ganti_id; ?>"
                                                  role="dialog">
                                                 <div class="modal-dialog modals-default">
                                                     <div class="modal-content">
@@ -444,5 +447,6 @@ if (@$_GET['act'] == '') {
 
     $kas->hapus($_GET['id']);
     header("location: ?page=kas");
+    echo $_GET['id'];
 }
 ?>
