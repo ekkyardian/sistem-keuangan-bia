@@ -8,6 +8,6 @@
 
 session_start();
 session_destroy();
-header("location: ../../login.php?akses=logout");
+header("location: ../../index.php?akses=logout");
 
 ?>

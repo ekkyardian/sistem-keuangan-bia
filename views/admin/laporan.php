@@ -1,6 +1,6 @@
 <?php
 include "../../models/admin/m_kas.php";
-include "../../models/admin/M_bulan.php";
+include "../../models/admin/m_bulan.php";
 
 $kas = new Kas($connection);
 

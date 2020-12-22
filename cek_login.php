@@ -32,9 +32,9 @@ if ($cek > 0) {
         $_SESSION['hak_akses']='direktur';
         header("location: views/direktur/index.php");
     } else {
-        header("location: login.php?akses=gagal");
+        header("location: index.php?akses=gagal");
     }
 } else {
-    header("location: login.php?akses=gagal");
+    header("location: index.php?akses=gagal");
 }
 ?>
